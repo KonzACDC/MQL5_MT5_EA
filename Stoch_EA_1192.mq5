@@ -25,7 +25,10 @@
 #property version   "1.00"
 
 #include<Trade/Trade.mqh>
+#include <Trade\SymbolInfo.mqh>  
+
 CTrade trade;
+CSymbolInfo    m_symbol;                     // symbol info object
 
 input double lotSize = 0.05;
 
@@ -51,6 +54,18 @@ void OnDeinit(const int reason)
 //+------------------------------------------------------------------+
 void OnTick()
   {
+  //--- we work only at the time of the birth of new bar
+   static datetime PrevBars=0;
+   datetime time_0=iTime(0);
+   if(time_0==PrevBars)
+      return;
+   PrevBars=time_0;
+   if(!RefreshRates())
+     {
+      PrevBars=iTime(1);
+      return;
+     }
+
    double macdArray[];
    double KArray[];
    double DArray[];
@@ -81,3 +96,36 @@ void OnTick()
    }
   }
 //+------------------------------------------------------------------+
+//+------------------------------------------------------------------+ 
+//| Get Time for specified bar index                                 | 
+//+------------------------------------------------------------------+ 
+datetime iTime(const int index,string symbol=NULL,ENUM_TIMEFRAMES timeframe=PERIOD_CURRENT)
+  {
+   if(symbol==NULL)
+      symbol=m_symbol.Name();
+   if(timeframe==0)
+      timeframe=Period();
+   datetime Time[1];
+   datetime time=0;
+   int copied=CopyTime(symbol,timeframe,index,1,Time);
+   if(copied>0)
+      time=Time[0];
+   return(time);
+  }
+//+------------------------------------------------------------------+
+//| Refreshes the symbol quotes data                                 |
+//+------------------------------------------------------------------+
+bool RefreshRates(void)
+  {
+//--- refresh rates
+   if(!m_symbol.RefreshRates())
+     {
+      Print("RefreshRates error");
+      return(false);
+     }
+//--- protection against the return value of "zero"
+   if(m_symbol.Ask()==0 || m_symbol.Bid()==0)
+      return(false);
+//---
+   return(true);
+  }
