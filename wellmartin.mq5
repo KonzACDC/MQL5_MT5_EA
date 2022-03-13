@@ -18,6 +18,13 @@ input ENUM_TIMEFRAMES AutostopTime = PERIOD_CURRENT;
 input int  AutostopPeriod = 3;
 input ENUM_SERIESMODE AutostopBuyMode = MODE_CLOSE;
 input ENUM_SERIESMODE AutostopSellMode = MODE_CLOSE;
+input bool AutoTP = false;
+input ENUM_TIMEFRAMES AutoTPTime = PERIOD_CURRENT;
+input int  AutoTPPeriod = 3;
+input ENUM_SERIESMODE AutoTPBuyMode = MODE_CLOSE;
+input ENUM_SERIESMODE AutoTPSellMode = MODE_CLOSE;
+
+
 input bool PSARstop = false;
 input ENUM_TIMEFRAMES base_tf;  //set timeframe
 input double sar_step=0.1;      //set parabolic step
