@@ -43,8 +43,8 @@ input ENUM_TIMEFRAMES ADXtimeframe = PERIOD_CURRENT;
 input int      ADXPeriod = 40;        
 input int      ADXLevel  = 45;  
 //--- ??????? ????????? ????????
-input int      TP        = 1200;      
- int      SL        = 6000;      
+ int      TP        = 4000;      
+ int      SL        = 4000;      
 input int      Slip      = 50;        
 input int      Stelth    = 0;         
 input double   KLot      = 2;        
@@ -157,14 +157,22 @@ Sell = false;
          //--- ????? ???????????
          if(Stelth==1) {stop=0;take=0;}
          //--- ????????? ????? ?? ???????
-         if(Autostop)//stopbuy
-{
+         if(Autostop)//Autostopbuy
+         {
       stop=NormalizeDouble(iLow(Symbol(),AutostopTime,iLowest(NULL,AutostopTime,AutostopBuyMode,AutostopPeriod,0)),_Digits);
       if(stop>NormalizeDouble(Ask-SL*_Point,_Digits))
-      {
-      stop=NormalizeDouble(iLow(Symbol(),AutostopTime,iLowest(NULL,AutostopTime,AutostopBuyMode,AutostopPeriod,0)),_Digits)-40.00;
-      }
-}
+            {
+               stop=NormalizeDouble(iLow(Symbol(),AutostopTime,iLowest(NULL,AutostopTime,AutostopBuyMode,AutostopPeriod,0)),_Digits)-40.00;
+            }
+         }
+          if(AutoTP)//AutoTPbuy
+         {
+      take=NormalizeDouble(iHigh(Symbol(),AutoTPTime,iHighest(NULL,AutoTPTime,AutoTPBuyMode,AutoTPPeriod,0)),_Digits);
+      if(take<NormalizeDouble(Ask+TP*_Point,_Digits))
+            {
+               stop=NormalizeDouble(iHigh(Symbol(),AutoTPTime,iHighest(NULL,AutoTPTime,AutoTPBuyMode,AutoTPPeriod,0)),_Digits)+40.00;
+            }
+         }
          trade.PositionOpen(_Symbol,ORDER_TYPE_BUY,Volume(),Ask,stop,take);
          //--- ?????? ??????????? ?????
          if(Stelth==1) PutLable("SL"+DoubleToString(Ask,_Digits),TimeCurrent(),NormalizeDouble(Ask-SL*_Point,_Digits),LableClr);
@@ -185,6 +193,15 @@ Sell = false;
       if(stop<NormalizeDouble(Bid+SL*_Point,_Digits))
       {
       stop=NormalizeDouble(iHigh(Symbol(),AutostopTime,iHighest(NULL,AutostopTime,AutostopSellMode,AutostopPeriod,0)),_Digits)+40.00;
+      }
+
+}
+if(AutoTP)//TPSell
+{
+      take=NormalizeDouble(iLow(Symbol(),AutoTPTime,iLowest(NULL,AutoTPTime,AutoTPSellMode,AutoTPPeriod,0)),_Digits);
+      if(take>NormalizeDouble(Bid+SL*_Point,_Digits))
+      {
+      take=NormalizeDouble(iLow(Symbol(),AutoTPTime,iLowest(NULL,AutoTPTime,AutoTPSellMode,AutoTPPeriod,0)),_Digits)-40.00;
       }
 
 }
