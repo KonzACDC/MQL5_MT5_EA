@@ -356,8 +356,8 @@ double perceptron1()
   {
    double       w1 = x11 - 100;
    double       w2 = x12 - 100;
-   double       w3 = x12 - 100;
-   double       w4 = x12 - 100;
+   double       w3 = x13 - 100;
+   double       w4 = x14 - 100;
    double a1 = iClose(m_symbol.Name(),Period(),0) - iOpen(m_symbol.Name(),Period(),p1);
    double a2 = iOpen(m_symbol.Name(),Period(),p1) - iOpen(m_symbol.Name(),Period(),p1 * 2);
    double a3 = iOpen(m_symbol.Name(),Period(),p1 * 2) - iOpen(m_symbol.Name(),Period(),p1 * 3);
